@@ -2,9 +2,14 @@ package utd.database.com;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author nikitakothari
+ *
+ *         Main Class
+ */
+
 public class Main {
-	public Main() {
-	}
 
 	public static boolean isExit = false;
 	public static java.util.Scanner scanner = new java.util.Scanner(System.in).useDelimiter(";");
@@ -31,56 +36,66 @@ public class Main {
 	}
 
 	private static void parseUserCommand(String userCommand) {
-		ArrayList<String> commandTokens = new ArrayList(java.util.Arrays.asList(userCommand.split(" ")));
+		ArrayList<String> commandTokens = new ArrayList<String>(java.util.Arrays.asList(userCommand.split(" ")));
 		boolean isDatabasePresent = (utility.getSeletedDatabase() != null) && (!utility.getSeletedDatabase().isEmpty());
 		boolean showErrorMessage = false;
-		String str;
-		switch ((str = (String) commandTokens.get(0)).hashCode()) {
-		case -1352294148:
-			if (str.equals("create")) {
-			}
+		String str = commandTokens.get(0);
+		switch (str) {
+		case "create":
+			if (commandTokens.get(1).equals("table"))
+				create.table(userCommand);
+			else
+				create.database(userCommand);
 			break;
-		case -1335458389:
-			if (str.equals("delete")) {
-			}
+
+		case "delete":
+			delete.delete(userCommand);
 			break;
-		case -1183792455:
-			if (str.equals("insert")) {
-			}
+
+		case "insert":
+			insert.insertRecord(userCommand);
 			break;
-		case -906021636:
-			if (str.equals("select")) {
-			}
+
+		case "select":
+			if (userCommand.contains("where"))
+				selectWhere.selectWhere(userCommand);
+			else
+				select.select(userCommand);
 			break;
-		case 116103:
-			if (str.equals("use"))
-				break;
+
+		case "use":
+			utility.setSeletedDatabase(commandTokens.get(1));
 			break;
-		case 3092207:
-			if (str.equals("drop")) {
-			}
+		case "drop":
+			if (commandTokens.get(1).equals("table"))
+				drop.table(userCommand);
+			else
+				drop.database(userCommand);
 			break;
-		case 3127582:
-			if (str.equals("exit")) {
-			}
+
+		case "exit":
+			System.exit(0);
 			break;
-		case 3198785:
-			if (str.equals("help")) {
-			}
+
+		case "help":
+			help.get();
 			break;
-		case 3482191:
-			if (str.equals("quit")) {
-			}
+		case "quit":
+			System.exit(0);
 			break;
-		case 3529469:
-			if (str.equals("show")) {
-			}
+
+		case "show":
+			if (commandTokens.get(1).equals("table"))
+				basic.showTables(userCommand);
+			else
+				basic.showDatabases(userCommand);
 			break;
-		case 351608024:
-			if (str.equals("version")) {
-			}
+
+		case "version":
+			System.out.println(utility.getVersion());
 			break;
-		case 1018214091:
+
+		case "describe":
 			if (!str.equals("describe")) {
 				if (commandTokens.size() != 2)
 					basic.useDatabase(userCommand);
@@ -127,13 +142,9 @@ public class Main {
 										insert.insertRecord(userCommand);
 									} else {
 										showErrorMessage = true;
-
-										help.help();
-
+										help.get();
 										System.out.println("DavisBaseLite Version " + utility.getVersion());
-
 										isExit = true;
-
 										isExit = true;
 									}
 								}
@@ -143,11 +154,6 @@ public class Main {
 				}
 			}
 			break;
-		}
-		label678: System.out.println("Check syntax");
-
-		label687: if (showErrorMessage) {
-			System.out.println("Select Database");
 		}
 	}
 }
